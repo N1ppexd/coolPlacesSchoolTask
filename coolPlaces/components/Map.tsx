@@ -9,32 +9,32 @@ type Props = {
 
     coolPlaces?: Array<{
         region: {
-            latitude: number;
-            longitude: number;
-        };
-        reason: string;
-        rating: number;
-        createdAt?: Date | null;
-    }>;
+            latitude: number
+            longitude: number
+        }
+        reason: string
+        rating: number
+        createdAt?: Date | null
+    }>
 }
 
 export default function Map({ region, onAddPlace, coolPlaces }: Props) {
 
-    const [selectedLocation, setSelectedLocation] = useState<Region>(region);
+    const [selectedLocation, setSelectedLocation] = useState<Region>(region)
 
-    const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
+    const [isSubmitting, setIsSubmitting] = useState<boolean>(false)
 
     useEffect(() => {
-        setSelectedLocation(region);
-    }, [region, coolPlaces]);
+        setSelectedLocation(region)
+    }, [region, coolPlaces])
 
     const handleAddPress = async (reason: string, rating: number) => {
         setIsSubmitting(false);
         if (!onAddPlace) return;
         try {
-            await onAddPlace(selectedLocation, reason, rating);
+            await onAddPlace(selectedLocation, reason, rating)
         } catch (err) {
-            console.error('onAddPlace error:', err);
+            console.error('onAddPlace error:', err)
         }
 
     }

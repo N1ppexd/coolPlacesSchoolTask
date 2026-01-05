@@ -9,36 +9,32 @@ import { useEffect, useState } from 'react';
 import { CoolPlaceType } from './types/coolPlaceType';
 
 export default function App() {
+
+
   const initialRegion: Region = {
     latitude: 60.192059,
     longitude: 24.945831,
     latitudeDelta: 0.0922,
     longitudeDelta: 0.0421,
-  };
+  }
 
-  const [places, setPlaces] = useState<CoolPlaceType[]>([]);
+  const [places, setPlaces] = useState<CoolPlaceType[]>([])
 
 
   useEffect(() => {
 
-    // You can load existing places from Firestore here if needed
-    //ask for permission and get current location
-    // Example: await requestLocationPermission();
-  
-    
+    loadPlaces()
 
-    loadPlaces();
-
-  }, []);
+  }, [])
 
 
   const loadPlaces = async () => {
-    const q = query(collection(db, COOLPLACES), orderBy("createdAt", "desc"));
+    const q = query(collection(db, COOLPLACES), orderBy("createdAt", "desc"))
 
     const unsubscibe = onSnapshot(q, (querySnapshot) => {
 
     const rows: CoolPlaceType[] = querySnapshot.docs.map(d => {
-        const data = d.data() as any;
+        const data = d.data() as any
 
         const place: CoolPlaceType = {
           region: {
@@ -54,7 +50,7 @@ export default function App() {
       setPlaces(rows)
     }, (err) => {
         console.error('loadPlaces onSnapshot error:', err)
-    });
+    })
 
     return () => unsubscibe()
   }
@@ -67,7 +63,7 @@ export default function App() {
     try {
       // Example async work: network call or DB write
 
-      const collectionRef = collection(db, COOLPLACES);
+      const collectionRef = collection(db, COOLPLACES)
       const docRef = await addDoc(collectionRef, {
         latitude: location.latitude,
         longitude: location.longitude,
@@ -75,19 +71,19 @@ export default function App() {
         rating: rating,
         createdAt: serverTimestamp()
       });
-      console.log('Document written with ID: ', docRef.id);
+      console.log('Document written with ID: ', docRef.id)
 
     } catch (err) {
-      console.error('handleAddPlace error:', err);
+      console.error('handleAddPlace error:', err)
     }
-  };
+  }
 
   return (
     <SafeAreaView style={styles.container}>
       <Map region={initialRegion} onAddPlace={handleAddPlace} coolPlaces={places} />
       <StatusBar style="auto" />
     </SafeAreaView>
-  );
+  )
 }
 
 const styles = StyleSheet.create({
@@ -96,4 +92,4 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     justifyContent: 'center',
   },
-});
+})

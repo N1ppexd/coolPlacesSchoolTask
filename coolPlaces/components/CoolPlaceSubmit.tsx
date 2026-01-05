@@ -3,15 +3,15 @@ import React, { useState } from 'react'
 import type { Region } from 'react-native-maps';
 
 type Props = {
-    region: Region;
-    onAddPlace: (reason: string, rating: number) => Promise<void> | void;
-    cancelAddPlace?: () => void;
+    region: Region
+    onAddPlace: (reason: string, rating: number) => Promise<void> | void
+    cancelAddPlace?: () => void
 }   
 
 export default function CoolPlaceSubmit({ onAddPlace, cancelAddPlace }: Props) {
 
-    const [reason, setReason] = useState<string>('');
-    const [rating, setRating] = useState<number>(0);
+    const [reason, setReason] = useState<string>('')
+    const [rating, setRating] = useState<number>(0)
 
   return (
     <View style={style.container}>

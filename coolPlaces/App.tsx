@@ -5,20 +5,22 @@ import Map from './components/Map';
 import type { Region } from 'react-native-maps';
 import {db, addDoc, serverTimestamp, collection, COOLPLACES, orderBy, getDocs, query, onSnapshot} from './firebase/config';
 import { useEffect, useState } from 'react';
+import * as Location from 'expo-location';
 
 import { CoolPlaceType } from './types/coolPlaceType';
 
 export default function App() {
 
-
-  const initialRegion: Region = {
+  const [initialRegion, setInitialRegion] = useState<Region>({
     latitude: 60.192059,
     longitude: 24.945831,
     latitudeDelta: 0.0922,
     longitudeDelta: 0.0421,
-  }
+  })
 
   const [places, setPlaces] = useState<CoolPlaceType[]>([])
+
+  const [hasPermission, sePermission] = useState<boolean>(false)
 
 
   useEffect(() => {
@@ -26,6 +28,33 @@ export default function App() {
     loadPlaces()
 
   }, [])
+
+
+  const getLocation = async () => {
+    try{
+
+      const {status} = await Location.requestForegroundPermissionsAsync()
+
+      if(status !== 'granted'){
+        return
+      }
+
+      sePermission(true)
+      
+      const location = await Location.getCurrentPositionAsync()
+      console.log('location:', location)
+      
+      setInitialRegion({
+        latitude: location.coords.latitude,
+        longitude: location.coords.longitude,
+        latitudeDelta: 0.0922,
+        longitudeDelta: 0.0421,
+      })
+    }
+    catch(err){
+      console.error('getLocation error:', err)
+    }
+  }
 
 
   const loadPlaces = async () => {
